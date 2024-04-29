@@ -1,0 +1,29 @@
+{
+  "name": "tg_music_bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for downloading songs in mp3 and mp4 formats from YouTube",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yarikkot04/tg_music_bot.git"
+  },
+  "author": "Yaroslav Kotenko <yarikkotenkoim13@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yarikkot04/tg_music_bot/issues"
+  },
+  "homepage": "https://github.com/yarikkot04/tg_music_bot#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "googleapis": "^137.1.0",
+    "mongoose": "^8.4.0",
+    "telegraf": "^4.16.3",
+    "ytdl-core": "^4.11.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.1"
+  }
+}
