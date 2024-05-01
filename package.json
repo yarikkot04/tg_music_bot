@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Telegram bot for downloading songs in mp3 and mp4 formats from YouTube",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
     "lint": "eslint .",
