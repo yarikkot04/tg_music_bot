@@ -1,3 +1,4 @@
+import { Markup } from 'telegraf'
 import messages from './messages.js'
 import User from '../model/user.js'
 
@@ -9,6 +10,8 @@ export default class Controler {
   initBot() {
     try {
       this.start()
+      this.setLanguageHandlers()
+      this.chooseLang()
       this.bot_launch()
       this.stop()
     } catch (e) {
@@ -36,6 +39,41 @@ export default class Controler {
     } catch (e) {
       console.error(e)
     }
+  }
+
+  chooseLang() {
+    try {
+      this._bot.command('choose_language', async (ctx) => {
+        const user = await User.findOne({ userTgId: ctx.chat.id })
+        ctx.reply(
+          messages[`${user.loc}`].chooseLanguage,
+          Markup.inlineKeyboard([
+            [Markup.button.callback(messages[user.loc].languages[0], 'eng')],
+            [Markup.button.callback(messages[user.loc].languages[1], 'ukr')]
+          ])
+        )
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  async setLanguageHandlers() {
+    this._handleLanguageAction('eng', 'eng')
+    this._handleLanguageAction('ukr', 'ukr')
+  }
+
+  async _handleLanguageAction(action, lang) {
+    this._bot.action(action, async (ctx) => {
+      const user = await User.findOne({ userTgId: ctx.chat.id })
+      this._setLang(lang, user, ctx)
+    })
+  }
+
+  async _setLang(lang, user, ctx) {
+    user.loc = lang
+    await user.save()
+    ctx.telegram.sendMessage(user.userTgId, messages[user.loc].chatLang)
   }
 
   async bot_launch() {
