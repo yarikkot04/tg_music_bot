@@ -26,7 +26,7 @@ export default class Downloader {
       if (format === 'MP3') {
         return this._downloadAudio(info, videoTitle, videoLink)
       }
-      // downloadVideo
+      return this._downloadVideo(info, videoTitle, videoLink)
     } catch (e) {
       if (e.message.includes(messages.server_errors.noVideoIdFind)) {
         return false
@@ -50,6 +50,34 @@ export default class Downloader {
     const filePath = resolve(__dirname, `./song/${sanitizedTitle}.mp3`)
     const writeStream = createWriteStream(filePath)
     audioStream.pipe(writeStream)
+    return new Promise((resolve, reject) => {
+      writeStream.on('finish', () => {
+        resolve(filePath)
+      })
+      writeStream.on('error', (err) => {
+        reject(err)
+      })
+    })
+  }
+
+  static async _downloadVideo(videoInfo, videoTitle, link) {
+    const formats = ytdl.filterFormats(videoInfo.formats, 'audioandvideo')
+    const videoFormat = ytdl.chooseFormat(formats, { quality: 'highestvideo' })
+
+    if (!videoFormat) {
+      throw new Error(messages.server_errors.notFoundVideoFormat)
+    }
+
+    const videoStream = ytdl(link, {
+      format: videoFormat
+    })
+
+    const sanitizedTitle = Downloader._sanitizeFileName(videoTitle)
+    const filePath = resolve(__dirname, `./song/${sanitizedTitle}.mp4`)
+
+    const writeStream = createWriteStream(filePath)
+    videoStream.pipe(writeStream)
+
     return new Promise((resolve, reject) => {
       writeStream.on('finish', () => {
         resolve(filePath)
