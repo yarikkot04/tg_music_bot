@@ -9,7 +9,8 @@ const messages = {
     downloadFormat: 'Download format: ',
     chooseMethod: 'Choose a download method:',
     downloadMethods: ['Name', 'Link'],
-    downloadMethod: 'Download method: '
+    downloadMethod: 'Download method: ',
+    downloadedFromMsg: 'Downloaded from @Everain_bot'
   },
   ukr: {
     greetings: 'Привіт! Тебе вітає Everain_Music_bot. Тут ти зможеш знайти музику на будь-який смак. Для більш детального опису можливостей бота скористайся командою /help.',
@@ -20,7 +21,13 @@ const messages = {
     downloadFormat: 'Формат скачування: ',
     chooseMethod: 'Оберіть метод скачування:',
     downloadMethods: ['Ім\'я', 'Посилання'],
-    downloadMethod: 'Метод скачування: '
+    downloadMethod: 'Метод скачування: ',
+    downloadedFromMsg: 'Скачано з @Everain_bot'
+  },
+  server_errors: {
+    sendAudio: 'Error sending audio: ',
+    deleteFile: 'Error deleting file:',
+    notFoundAudioFormat: 'Audio format not found'
   }
 }
 

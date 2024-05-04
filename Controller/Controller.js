@@ -1,6 +1,11 @@
 import { Markup } from 'telegraf'
 import messages from './messages.js'
 import User from '../model/user.js'
+import Downloader from './Downloader.js'
+import { unlink } from 'node:fs'
+import { promisify } from 'util'
+
+const unlinkAsync = promisify(unlink)
 
 export default class Controler {
   constructor(tgBot) {
@@ -16,6 +21,7 @@ export default class Controler {
       this.chooseDownloadFormat()
       this.setDownloadMethodHandlers()
       this.chooseDownloadMethod()
+      this.messages()
       this.bot_launch()
       this.stop()
     } catch (e) {
@@ -147,6 +153,52 @@ export default class Controler {
       const user = await User.findOne({ userTgId: ctx.chat.id })
       handler.call(this, value, user, ctx)
     })
+  }
+
+  messages() {
+    this._bot.on('message', async (ctx) => {
+      const chatId = ctx.chat.id
+      let loc = ''
+      try {
+        const user = await User.findOne({ userTgId: chatId })
+        loc = user.loc
+        if (user.downloadMethod === 'Link') {
+          const link = ctx.message.text
+          const song = await this._downloadByLink(link, user.downloadFormat)
+          await this._sendToUser(song, ctx, user.downloadFormat, user)
+        } else {
+          // downloadByName
+        }
+      } catch (e) {
+        await ctx.telegram.sendMessage(chatId, messages[loc].noValidSong)
+      }
+    })
+  }
+
+  async _downloadByLink(link, format) {
+    return await Downloader.downloadByLink(link, format)
+  }
+
+  async _sendToUser(song, ctx, format, user) {
+    try {
+      if (format === 'MP3') {
+        await ctx.replyWithAudio({ source: song }, {
+          caption: messages[user.loc].downloadedFromMsg
+        })
+      } else {
+        await ctx.replyWithVideo({ source: song }, {
+          caption: messages[user.loc].downloadedFromMsg
+        })
+      }
+    } catch (err) {
+      console.error(messages.server_errors.sendAudioOrVideo, err)
+    } finally {
+      try {
+        await unlinkAsync(song)
+      } catch (err) {
+        console.error(messages.server_errors.deleteFile, err)
+      }
+    }
   }
 
   async bot_launch() {
