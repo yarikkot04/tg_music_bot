@@ -12,6 +12,8 @@ const messages = {
     downloadMethod: 'Download method: ',
     downloadedFromMsg: 'Downloaded from @Everain_bot',
     noValidSong: 'No valid songs found',
+    emptyHistory: 'History is empty',
+    historyMsg: 'Your song history: '
   },
   ukr: {
     greetings: 'Привіт! Тебе вітає Everain_Music_bot. Тут ти зможеш знайти музику на будь-який смак. Для більш детального опису можливостей бота скористайся командою /help.',
@@ -24,11 +26,16 @@ const messages = {
     downloadMethods: ['Ім\'я', 'Посилання'],
     downloadMethod: 'Метод скачування: ',
     downloadedFromMsg: 'Скачано з @Everain_bot',
-    noValidSong: 'Не знайдено жодної дійсної пісні'
+    noValidSong: 'Не знайдено жодної дійсної пісні',
+    emptyHistory: 'Історія порожня',
+    historyMsg: 'Історія вашої музики: '
   },
   server_errors: {
     sendAudio: 'Error sending audio: ',
+    sendVideo: 'Error sending video: ',
     deleteFile: 'Error deleting file:',
+    noVideoIdFind: 'No video id found',
+    notFoundVideoFormat: 'Video format not found',
     notFoundAudioFormat: 'Audio format not found'
   }
 }

@@ -22,6 +22,7 @@ export default class Controler {
       this.setDownloadMethodHandlers()
       this.chooseDownloadMethod()
       this.setSongSelectionHandler()
+      this.getHistory()
       this.messages()
       this.bot_launch()
       this.stop()
@@ -166,12 +167,13 @@ export default class Controler {
         if (user.downloadMethod === 'Link') {
           const link = ctx.message.text
           const song = await this._downloadByLink(link, user.downloadFormat)
-          await this._sendToUser(song, ctx, user.downloadFormat, user)
+          const regex = /v=([^&]+)/
+          const songId = link.match(regex)[1]
+          await this._sendToUser(song, songId, ctx, user.downloadFormat, user)
         } else {
           this._downloadByName(ctx.message.text, ctx)
         }
       } catch (e) {
-        console.log(1)
         await ctx.telegram.sendMessage(chatId, messages[loc].noValidSong)
       }
     })
@@ -208,11 +210,11 @@ export default class Controler {
       const songId = ctx.match[1]
       const link = `https://www.youtube.com/watch?v=${songId}`
       const song = await this._downloadByLink(link, user.downloadFormat)
-      await this._sendToUser(song, ctx, user.downloadFormat, user)
+      await this._sendToUser(song, songId, ctx, user.downloadFormat, user)
     })
   }
 
-  async _sendToUser(song, ctx, format, user) {
+  async _sendToUser(song, songId, ctx, format, user) {
     try {
       if (format === 'MP3') {
         await ctx.replyWithAudio({ source: song }, {
@@ -223,6 +225,8 @@ export default class Controler {
           caption: messages[user.loc].downloadedFromMsg
         })
       }
+      const extractedSongName = this._extractFileName(song)
+      await this._addToHistory(extractedSongName, songId, user)
     } catch (err) {
       console.error(messages.server_errors.sendAudioOrVideo, err)
     } finally {
@@ -232,6 +236,29 @@ export default class Controler {
         console.error(messages.server_errors.deleteFile, err)
       }
     }
+  }
+
+  getHistory() {
+    this._bot.command('history', async (ctx) => {
+      const user = await User.findOne({ userTgId: ctx.chat.id })
+      const chatId = ctx.chat.id
+      const songs = user.userHistory.songs
+      if (songs.length === 0) {
+        return ctx.telegram.sendMessage(chatId, messages[user.loc].emptyHistory)
+      }
+      const buttons = songs.map(s => Markup.button.callback(s.songName, `song_${s.songId}`))
+      return ctx.reply(messages[user.loc].historyMsg, Markup.inlineKeyboard(buttons, { columns: 1 }))
+    })
+  }
+
+  async _addToHistory(songName, songId, user) {
+    user.addToHistory({ songName, songId })
+  }
+
+  _extractFileName(filePath) {
+    const fileNameWithExtension = filePath.split('/').pop()
+    const fileNameWithoutExtension = fileNameWithExtension.replace(/\.(mp3|mp4)$/, '')
+    return fileNameWithoutExtension
   }
 
   async bot_launch() {
