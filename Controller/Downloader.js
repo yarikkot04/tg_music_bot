@@ -35,6 +35,25 @@ export default class Downloader {
     }
   }
 
+  static async searchSongsByName(songName) {
+    try {
+      const response = await this._youtube.search.list({
+        q: songName,
+        part: 'snippet',
+        type: 'video',
+        maxResults: 10
+      })
+
+      return response.data.items.map(item => ({
+        id: item.id.videoId,
+        title: item.snippet.title
+      }))
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+  }
+
   static async _downloadAudio(videoInfo, videoTitle, link) {
     const audioFormat = ytdl.chooseFormat(videoInfo.formats, {
       filter: 'audioonly'

@@ -10,7 +10,8 @@ const messages = {
     chooseMethod: 'Choose a download method:',
     downloadMethods: ['Name', 'Link'],
     downloadMethod: 'Download method: ',
-    downloadedFromMsg: 'Downloaded from @Everain_bot'
+    downloadedFromMsg: 'Downloaded from @Everain_bot',
+    noValidSong: 'No valid songs found',
   },
   ukr: {
     greetings: 'Привіт! Тебе вітає Everain_Music_bot. Тут ти зможеш знайти музику на будь-який смак. Для більш детального опису можливостей бота скористайся командою /help.',
@@ -22,7 +23,8 @@ const messages = {
     chooseMethod: 'Оберіть метод скачування:',
     downloadMethods: ['Ім\'я', 'Посилання'],
     downloadMethod: 'Метод скачування: ',
-    downloadedFromMsg: 'Скачано з @Everain_bot'
+    downloadedFromMsg: 'Скачано з @Everain_bot',
+    noValidSong: 'Не знайдено жодної дійсної пісні'
   },
   server_errors: {
     sendAudio: 'Error sending audio: ',

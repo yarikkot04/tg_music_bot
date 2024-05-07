@@ -21,6 +21,7 @@ export default class Controler {
       this.chooseDownloadFormat()
       this.setDownloadMethodHandlers()
       this.chooseDownloadMethod()
+      this.setSongSelectionHandler()
       this.messages()
       this.bot_launch()
       this.stop()
@@ -167,9 +168,10 @@ export default class Controler {
           const song = await this._downloadByLink(link, user.downloadFormat)
           await this._sendToUser(song, ctx, user.downloadFormat, user)
         } else {
-          // downloadByName
+          this._downloadByName(ctx.message.text, ctx)
         }
       } catch (e) {
+        console.log(1)
         await ctx.telegram.sendMessage(chatId, messages[loc].noValidSong)
       }
     })
@@ -177,6 +179,37 @@ export default class Controler {
 
   async _downloadByLink(link, format) {
     return await Downloader.downloadByLink(link, format)
+  }
+
+  async _downloadByName(name, ctx) {
+    const user = await User.findOne({ userTgId: ctx.chat.id })
+    const songs = await Downloader.searchSongsByName(name)
+    if (songs.length > 0) {
+      this._showSongMenu(ctx, songs, user)
+    } else {
+      return ctx.reply(messages[user.loc].noValidSong)
+    }
+  }
+
+  async _showSongMenu(ctx, songs, user) {
+    const songButtons = songs
+      .filter(song => song && song.id && song.title)
+      .map(song => Markup.button.callback(song.title, `song_${song.id}`))
+
+    await ctx.reply(
+      messages[user.loc].searchResults,
+      Markup.inlineKeyboard(songButtons, { columns: 1 })
+    )
+  }
+
+  async setSongSelectionHandler() {
+    this._bot.action(/song_([a-zA-Z0-9_-]+)/, async (ctx) => {
+      const user = await User.findOne({ userTgId: ctx.chat.id })
+      const songId = ctx.match[1]
+      const link = `https://www.youtube.com/watch?v=${songId}`
+      const song = await this._downloadByLink(link, user.downloadFormat)
+      await this._sendToUser(song, ctx, user.downloadFormat, user)
+    })
   }
 
   async _sendToUser(song, ctx, format, user) {
