@@ -13,7 +13,14 @@ const messages = {
     downloadedFromMsg: 'Downloaded from @Everain_bot',
     noValidSong: 'No valid songs found',
     emptyHistory: 'History is empty',
-    historyMsg: 'Your song history: '
+    historyMsg: 'Your song history: ',
+    helpMessage: `Bot Documentation:
+    /start - start a chat with the bot
+    /help - get help information
+    /choose_language - choose a language
+    /choose_format - select a download format
+    /choose_method - select a download method (Name | Link)
+    /history - view download history (last 10)`
   },
   ukr: {
     greetings: 'Привіт! Тебе вітає Everain_Music_bot. Тут ти зможеш знайти музику на будь-який смак. Для більш детального опису можливостей бота скористайся командою /help.',
@@ -28,7 +35,14 @@ const messages = {
     downloadedFromMsg: 'Скачано з @Everain_bot',
     noValidSong: 'Не знайдено жодної дійсної пісні',
     emptyHistory: 'Історія порожня',
-    historyMsg: 'Історія вашої музики: '
+    historyMsg: 'Історія вашої музики: ',
+    helpMessage: `Документація щодо бота:
+    /start - розпочати чат із ботом
+    /help - отримати довідкову інформацію
+    /choose_language - обрати мову
+    /choose_format - обрати формат завантаження
+    /choose_method - обрати метод завантаження (Назва | Лінк)
+    /history - переглянути історію завантажень (останні 10)`
   },
   server_errors: {
     sendAudio: 'Error sending audio: ',

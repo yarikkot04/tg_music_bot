@@ -15,6 +15,7 @@ export default class Controler {
   initBot() {
     try {
       this.start()
+      this.help()
       this.setLanguageHandlers()
       this.chooseLang()
       this.setDownloadFormatHandlers()
@@ -47,6 +48,18 @@ export default class Controler {
         } else {
           ctx.telegram.sendMessage(chatId, messages[isUserExist.loc].greetings)
         }
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  help() {
+    try {
+      this._bot.help(async (ctx) => {
+        const user = await User.findOne({ userTgId: ctx.chat.id })
+        const chatId = ctx.chat.id
+        ctx.telegram.sendMessage(chatId, messages[user.loc].helpMessage)
       })
     } catch (e) {
       console.error(e)
