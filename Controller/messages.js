@@ -20,7 +20,8 @@ const messages = {
     /choose_language - choose a language
     /choose_format - select a download format
     /choose_method - select a download method (Name | Link)
-    /history - view download history (last 10)`
+    /history - view download history (last 10)`,
+    searchResults: 'Search results: '
   },
   ukr: {
     greetings: 'Привіт! Тебе вітає Everain_Music_bot. Тут ти зможеш знайти музику на будь-який смак. Для більш детального опису можливостей бота скористайся командою /help.',
@@ -42,7 +43,8 @@ const messages = {
     /choose_language - обрати мову
     /choose_format - обрати формат завантаження
     /choose_method - обрати метод завантаження (Назва | Лінк)
-    /history - переглянути історію завантажень (останні 10)`
+    /history - переглянути історію завантажень (останні 10)`,
+    searchResults: 'Результати пошуку: '
   },
   server_errors: {
     sendAudio: 'Error sending audio: ',
